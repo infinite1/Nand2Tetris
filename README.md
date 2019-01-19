@@ -6,4 +6,5 @@ This repository aims to build a modern computer system inspired by Nand2Tetris.
 3. Project 3 builds the main memory unit Random Access Memory (RAM) of the computer based on sequential logic.
 4. Project 4 uses the Hack machine language to build two simple programs (Fill and Mult).
 5. Project 5 implement the Hack Computer by assembling three components: ROM32K, CPU and Memory.
+6. Project 6 implements the Assembler of Hack Computer in Python, which translates the assembly Hack Program into corresponding Hack machine code.
 
