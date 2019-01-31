@@ -8,4 +8,5 @@ This repository aims to build the Hack computer system of Nand2Tetris.
 5. Project 5 implements the Hack Computer by assembling three components: ROM32K, CPU and Memory.
 6. Project 6 implements the Assembler of Hack Computer in Python, which translates the assembly Hack Program into corresponding Hack machine code.
 7. Project 7 implements the VM translator of Hack Computer in Python, which mainly focus on arithmetic, logical and memory access commands.
+8. Project 8 finishes the implementation of VM translator by integrating the translation of function calls and program flow commands.
 
