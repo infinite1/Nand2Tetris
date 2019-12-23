@@ -39,5 +39,45 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    Not(in=instruction[15], out=isAInstruct);
+    Not(in=isAInstruct, out=isCInstruct);
+    Mux16(a=aluOut, b=instruction, sel=isAInstruct, out=aluOutMuxInstruct);
+
+    // determine A register load bit
+    And(a=isCInstruct, b=instruction[5], out=cInstructAndLoadA);
+    Or(a=isAInstruct, b=cInstructAndLoadA, out=loadA);
+    ARegister(in=aluOutMuxInstruct, load=loadA, out=ARegOut, out[0..14]=addressM);
+
+    // determine whether alu operates on A register or memory
+    And(a=isCInstruct, b=instruction[12], out=aRegAndMemory);
+    Mux16(a=ARegOut, b=inM, sel=aRegAndMemory, out=aRegMuxMemory);
+
+    // determine D register load bit
+    And(a=isCInstruct, b=instruction[4], out=loadD);
+    DRegister(in=aluOut, load=loadD, out=DRegOut);
+
+    // write to Memory?
+    And(a=isCInstruct, b=instruction[3], out=writeM);
+
+    ALU(x=DRegOut, y=aRegMuxMemory, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=aluOut, out=outM, zr=zr, ng=ng);
+
+    // alu output positive?
+    Not(in=zr, out=notzr);
+    Not(in=ng, out=notng);
+    And(a=notzr, b=notng, out=po);
+
+    // pc load?
+    And(a=ng, b=instruction[2], out=temp1);
+    And(a=zr, b=instruction[1], out=temp2);
+    And(a=po, b=instruction[0], out=temp3);
+    Or(a=temp1, b=temp2, out=temp12);
+    Or(a=temp12,b=temp3,out=temp123);
+    And(a=temp123, b=isCInstruct, out=load);
+
+    // pc inc?
+    Not(in=temp123, out=notJump);
+    Or(a=notJump, b=isAInstruct, out=inc);
+    
+    PC(in=ARegOut, load=load, inc=inc, reset=reset, out[0..14]=pc);
+
 }
